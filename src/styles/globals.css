@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 35, 47, 62; /* AWS Blue */
+  --background-end-rgb: 20, 30, 45;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer components {
+  .card {
+    @apply relative bg-white text-aws-blue rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105;
+  }
+  
+  .service-card {
+    @apply border-2 border-aws-orange;
+  }
+  
+  .support-card {
+    @apply border-2 border-blue-500;
+  }
+  
+  .card-title {
+    @apply text-lg font-bold p-2 bg-gradient-to-r;
+  }
+  
+  .service-card .card-title {
+    @apply from-aws-orange to-yellow-500 text-white;
+  }
+  
+  .support-card .card-title {
+    @apply from-blue-500 to-blue-400 text-white;
+  }
+  
+  .card-cost {
+    @apply absolute top-2 right-2 bg-white text-aws-blue rounded-full w-6 h-6 flex items-center justify-center font-bold border border-current;
+  }
+  
+  .card-content {
+    @apply p-3;
+  }
+  
+  .card-effect {
+    @apply text-sm font-medium mb-2;
+  }
+  
+  .card-description {
+    @apply text-xs text-gray-700;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-aws-orange text-white hover:bg-yellow-600;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-aws-blue hover:bg-gray-300;
+  }
+  
+  /* カード関連の強化スタイル */
+  .card-wrapper {
+    @apply transition-all duration-200 rounded-lg;
+  }
+
+  .card-wrapper:hover {
+    @apply transform -translate-y-1 shadow-xl;
+  }
+  
+  /* カテゴリタブ */
+  .category-tabs {
+    @apply flex overflow-x-auto py-2 px-1 space-x-1 bg-white border-l border-r border-gray-200;
+  }
+  
+  .category-tab {
+    @apply px-3 py-1 rounded-lg whitespace-nowrap transition-colors;
+  }
+  
+  .category-tab-active {
+    @apply bg-aws-blue text-white;
+  }
+  
+  .category-tab-inactive {
+    @apply bg-gray-100 text-gray-700 hover:bg-gray-200;
+  }
+  
+  /* カード詳細パネル */
+  .card-detail-panel {
+    @apply fixed bottom-4 right-4 w-80 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50;
+  }
+  
+  /* キーワードタグ */
+  .keyword-tag {
+    @apply text-xs px-2 py-1 rounded-full;
+  }
+  
+  .keyword-tag-relevant {
+    @apply bg-aws-orange text-white;
+  }
+  
+  .keyword-tag-normal {
+    @apply bg-gray-100 text-gray-600;
+  }
+}
+
+/* タイピングカーソルのアニメーション */
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* AWS カラー */
+.text-aws-blue {
+  color: #232F3E;
+}
+
+.bg-aws-blue {
+  background-color: #232F3E;
+}
+
+.text-aws-light-blue {
+  color: #1E88E5;
+}
+
+.bg-aws-light-blue {
+  background-color: #1E88E5;
+}
+
+.text-aws-orange {
+  color: #FF9900;
+}
+
+.bg-aws-orange {
+  background-color: #FF9900;
+}
+
+.text-aws-gray {
+  color: #879196;
+}
+
+.bg-aws-gray {
+  background-color: #F2F3F3;
+}
+
+.text-aws-light-orange {
+  color: #EC7211;
+}
+
+.bg-aws-light-orange {
+  background-color: #EC7211;
+}
+
+/* カードシャドウ */
+.shadow-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}

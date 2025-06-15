@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 35, 47, 62;
+  --background-start-rgb: 245, 245, 245;
+  --background-end-rgb: 255, 255, 255;
+  --aws-orange: 255, 153, 0;
+  --aws-blue: 35, 47, 62;
+  --aws-light-blue: 103, 173, 219;
+  --aws-light-orange: 255, 204, 102;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    );
+  min-height: 100vh;
+}
+
+@layer components {
+  .btn {
+    @apply font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 shadow-md;
+  }
+  
+  .btn-primary {
+    @apply bg-aws-orange text-white hover:bg-opacity-90 focus:ring-aws-orange;
+  }
+  
+  .btn-secondary {
+    @apply bg-aws-light-blue text-white hover:bg-opacity-90 focus:ring-aws-light-blue;
+  }
+  
+  .btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden transition-all duration-200 border border-gray-200;
+  }
+  
+  .card-header {
+    @apply bg-aws-blue p-3 text-white font-bold;
+  }
+  
+  .card-body {
+    @apply p-4;
+  }
+  
+  .progress-bar {
+    @apply h-2 rounded-full overflow-hidden bg-gray-200;
+  }
+  
+  .progress-bar-fill {
+    @apply h-full transition-all duration-300;
+  }
+}
+
+/* AWS Colors */
+.text-aws-orange {
+  color: rgb(var(--aws-orange));
+}
+
+.bg-aws-orange {
+  background-color: rgb(var(--aws-orange));
+}
+
+.text-aws-blue {
+  color: rgb(var(--aws-blue));
+}
+
+.bg-aws-blue {
+  background-color: rgb(var(--aws-blue));
+}
+
+.text-aws-light-blue {
+  color: rgb(var(--aws-light-blue));
+}
+
+.bg-aws-light-blue {
+  background-color: rgb(var(--aws-light-blue));
+}
+
+.text-aws-light-orange {
+  color: rgb(var(--aws-light-orange));
+}
+
+.bg-aws-light-orange {
+  background-color: rgb(var(--aws-light-orange));
+}
+
+/* Animation for typing effect */
+.typing-animation {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 3s steps(40, end);
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Loading animation */
+.loading-dots:after {
+  content: '.';
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60% { content: '...'; }
+  80%, 100% { content: ''; }
+}
+
+/* Pulse animation */
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Confetti animation for results page */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  opacity: 0.7;
+  animation: fall 5s linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(600px) rotate(360deg);
+    opacity: 0;
+  }
+}
