@@ -18,7 +18,8 @@ export async function GET(request: NextRequest) {
       ? excludeParam.split(',').map(id => parseInt(id, 10))
       : [];
     
-    const challenge = await getRandomChallenge(excludeIds);
+    const modeParam = request.nextUrl.searchParams.get('mode') || 'default';
+    const challenge = await getRandomChallenge(excludeIds, modeParam as 'default' | 'ssm');
     return NextResponse.json(challenge);
   } catch (error) {
     console.error('API error:', error);

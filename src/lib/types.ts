@@ -46,6 +46,9 @@ export interface GameState {
   usedServiceCards: Card[]; // これまでのターンで使用したサービスカード
   usedSupportCards: Card[]; // これまでのターンで使用したサポートカード
   totalCostUsed: number; // これまでのターンで使用した総コスト
+  availableServiceCards: Card[];
+  availableSupportCards: Card[];
+  gameMode: 'default' | 'ssm';
 }
 
 // 完了したチャレンジの型

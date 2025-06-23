@@ -125,13 +125,18 @@ export async function evaluateFinalSolution(
 /**
  * ランダムなチャレンジを取得するAPI呼び出し
  */
-export async function getChallenge(excludeIds: number[] = []): Promise<Challenge> {
+export async function getChallenge(
+  excludeIds: number[] = [],
+  mode: 'default' | 'ssm' = 'default'
+): Promise<Challenge> {
   try {
-    const queryParams = excludeIds.length > 0 
-      ? `?exclude=${excludeIds.join(',')}`
-      : '';
-      
-    const response = await fetch(`/api/challenge${queryParams}`);
+    const params = new URLSearchParams();
+    if (excludeIds.length > 0) params.append('exclude', excludeIds.join(','));
+    if (mode) params.append('mode', mode);
+
+    const query = params.toString() ? `?${params.toString()}` : '';
+
+    const response = await fetch(`/api/challenge${query}`);
     
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);

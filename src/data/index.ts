@@ -11,9 +11,10 @@ import { serviceCards4 } from './cards4';
 import { serviceCards5 } from './cards5';
 import { serviceCards6 } from './cards6';
 import { serviceCards7 } from './cards7';
+import { ssmServiceCards } from './ssmServiceCards';
 import { supportCards } from './supportCards';
-import { supportCards2 } from './supportCards2';
 import { challenges } from './challenges';
+import { ssmChallenges } from './ssmChallenges';
 
 // Combine all service cards
 export const allServiceCards: Card[] = [
@@ -37,5 +38,5 @@ export const allCards: Card[] = [
   ...allSupportCards
 ];
 
-// Export challenges
-export { challenges };
+// Export data sets
+export { challenges, ssmServiceCards, ssmChallenges };

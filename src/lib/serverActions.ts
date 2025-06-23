@@ -6,7 +6,7 @@
  */
 
 import { Card, Challenge, EvaluationResult, FinalEvaluationResult, TurnHistory } from "./types";
-import { challenges } from "../data/index";
+import { challenges, ssmChallenges } from "../data/index";
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 
 // サーバーサイドでのBedrockクライアントの初期化
@@ -91,8 +91,12 @@ const FINAL_EVALUATION_PROMPT = `
  * @param excludeIds 除外するチャレンジIDの配列（オプション）
  * @returns 選択されたチャレンジ
  */
-export async function getRandomChallenge(excludeIds: number[] = []): Promise<Challenge> {
-  const availableChallenges = challenges.filter(c => !excludeIds.includes(c.id));
+export async function getRandomChallenge(
+  excludeIds: number[] = [],
+  mode: 'default' | 'ssm' = 'default'
+): Promise<Challenge> {
+  const list = mode === 'ssm' ? ssmChallenges : challenges;
+  const availableChallenges = list.filter(c => !excludeIds.includes(c.id));
   const shuffledChallenges = [...availableChallenges].sort(() => Math.random() - 0.5);
   return shuffledChallenges[0];
 }

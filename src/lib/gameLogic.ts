@@ -4,7 +4,6 @@
  */
 
 import { Card, Challenge, GameState, CompletedChallenge } from './types';
-import { allServiceCards, allSupportCards } from '../data/index';
 
 // 定数
 const INITIAL_SERVICE_HAND_SIZE = 10; // 初期サービスカード手札サイズを10枚に変更
@@ -17,7 +16,11 @@ const MAX_SERVICE_CARDS = 3; // 一度に選択できるサービスカードの
  * ゲームの初期状態を作成する関数
  * @returns 初期化されたゲーム状態
  */
-export function initializeGame(): GameState {
+export function initializeGame(
+  serviceCards: Card[],
+  supportCards: Card[],
+  mode: 'default' | 'ssm' = 'default'
+): GameState {
   // 初期状態では手札を空にする
   return {
     currentTurn: 1,
@@ -33,11 +36,14 @@ export function initializeGame(): GameState {
     cardsToDrawNextTurn: 1,
     completedChallenges: [],
     totalScore: 0,
-    serviceDeck: [...allServiceCards], // 全サービスカードをデッキに入れる
+    serviceDeck: [...serviceCards],
     isGameOver: false,
     usedServiceCards: [],
     usedSupportCards: [],
-    totalCostUsed: 0
+    totalCostUsed: 0,
+    availableServiceCards: serviceCards,
+    availableSupportCards: supportCards,
+    gameMode: mode
   };
 }
 
@@ -242,7 +248,10 @@ export function selectNewChallengeAndDealCards(gameState: GameState, challenge: 
   console.log(`Challenge selected: ${challenge.title} with keywords: ${challenge.keywords.join(', ')}`);
   
   // 全サービスカードを関連性スコアでソート
-  const sortedServiceCards = sortCardsByRelevance(allServiceCards, challenge);
+  const sortedServiceCards = sortCardsByRelevance(
+    gameState.availableServiceCards,
+    challenge
+  );
   
   // 関連性の高いカードを取得（上位50%）
   const highRelevanceCount = Math.ceil(sortedServiceCards.length * 0.5);
@@ -270,7 +279,10 @@ export function selectNewChallengeAndDealCards(gameState: GameState, challenge: 
   }
   
   // 全サポートカードを関連性スコアでソート
-  const sortedSupportCards = sortCardsByRelevance(allSupportCards, challenge);
+  const sortedSupportCards = sortCardsByRelevance(
+    gameState.availableSupportCards,
+    challenge
+  );
   
   // 関連性の高いサポートカードを選択
   const initialSupportCards = sortedSupportCards.slice(0, INITIAL_SUPPORT_CARDS_SIZE);
