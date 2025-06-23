@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card as CardType, Challenge, GameState, TurnHistory } from '../../lib/types';
-import { challenges } from '../../data/index';
+import { gameModes, GameMode } from '../../data/gameModes';
 import ChallengeCard from '../../components/ChallengeCard';
 import ChallengeStatus from '../../components/ChallengeStatus';
 import EnhancedHand from '../../components/EnhancedHand';
@@ -34,37 +34,38 @@ export default function Game() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [turnHistory, setTurnHistory] = useState<TurnHistory[]>([]);
+  const [mode, setMode] = useState<GameMode | null>(null);
   
   // ゲームの初期化
   useEffect(() => {
-    console.log("Initializing game...");
-    const initialGameState = initializeGame();
+    if (!mode) return;
+
+    const config = gameModes[mode];
+    console.log('Initializing game...', mode);
+    const initialGameState = initializeGame(
+      config.serviceCards,
+      config.supportCards,
+      mode
+    );
     setGameState(initialGameState);
-    
-    // チャレンジを選択
+
     setTimeout(async () => {
       try {
-        // サーバーサイドからチャレンジを取得
-        const challenge = await getChallenge();
-        
-        // チャレンジに関連するカードを配る
+        const challenge = await getChallenge([], mode);
         setGameState(prevState => {
           if (!prevState) return null;
           return selectNewChallengeAndDealCards(prevState, challenge);
         });
       } catch (error) {
         console.error('Failed to fetch challenge:', error);
-        // フォールバック: クライアントサイドでチャレンジを選択
-        const challenge = selectNewChallenge(challenges);
-        
-        // チャレンジに関連するカードを配る
+        const challenge = selectNewChallenge(config.challenges);
         setGameState(prevState => {
           if (!prevState) return null;
           return selectNewChallengeAndDealCards(prevState, challenge);
         });
       }
     }, 1500);
-  }, []);
+  }, [mode]);
   
   // サービスカードを選択する処理
   const handleServiceCardSelect = (card: CardType) => {
@@ -249,6 +250,27 @@ export default function Game() {
     }
   };
   
+  if (!mode) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+          {Object.values(gameModes).map(m => (
+            <div key={m.id} className="bg-white rounded-lg shadow-card border border-gray-200 p-6 flex flex-col">
+              <h2 className="text-xl font-bold text-aws-blue mb-2">{m.title}</h2>
+              <p className="text-gray-700 flex-grow whitespace-pre-wrap">{m.description}</p>
+              <button
+                className="btn btn-primary mt-4"
+                onClick={() => setMode(m.id as GameMode)}
+              >
+                このモードで開始
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   if (!gameState) {
     return (
       <div className="flex items-center justify-center min-h-screen">
