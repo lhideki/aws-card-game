@@ -14,6 +14,7 @@ import ChallengeStatus from '../../components/ChallengeStatus';
 import EnhancedHand from '../../components/EnhancedHand';
 import SelectedCards from '../../components/SelectedCards';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingOverlay from '../../components/LoadingOverlay';
 import CardSelectionModal from '../../components/CardSelectionModal';
 import { 
   initializeGame, 
@@ -396,6 +397,8 @@ export default function Game() {
           onClose={handleCloseCardSelection}
         />
       )}
+
+      {isLoading && <LoadingOverlay text="LLMの回答を待っています..." />}
     </div>
   );
 }
