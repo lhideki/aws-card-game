@@ -16,6 +16,10 @@ export interface Card {
   keywords: string[];
   /** 次のターンで引くカードを選択できるサポートカードか */
   allowsCardSelection?: boolean;
+  /** 次のターンで引くカード枚数を倍増させる係数 */
+  drawMultiplier?: number;
+  /** 次のターンで引くカード枚数を追加する値 */
+  extraCardsNextTurn?: number;
 }
 
 // チャレンジの型定義

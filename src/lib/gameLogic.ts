@@ -512,6 +512,16 @@ export function advanceToNextTurn(
 
   let drawCount = gameState.cardsToDrawNextTurn;
 
+  // サポートカードによる次ターンのドロー枚数増加を適用
+  for (const support of gameState.activatedSupportCards) {
+    if (support.drawMultiplier && support.drawMultiplier > 1) {
+      drawCount = Math.ceil(drawCount * support.drawMultiplier);
+    }
+    if (support.extraCardsNextTurn) {
+      drawCount += support.extraCardsNextTurn;
+    }
+  }
+
   if (gameState.selectedCardForNextTurn) {
     newCards.push(gameState.selectedCardForNextTurn);
     drawCount = Math.max(0, drawCount - 1);

@@ -38,6 +38,7 @@ export const allSupportCards: Card[] = [
     name: 'オートスケーリング',
     type: 'support',
     cost: 1,
+    drawMultiplier: 3,
     effect: '次のターンで引くカードの枚数を3倍にします。また、EC2またはECSと組み合わせると状況レベルが10%向上します。',
     description: 'リソースを需要に応じて自動的にスケールさせる機能を実装し、トラフィック変動に対応します。',
     keywords: ['スケーラビリティ', '自動化', '需要対応']
@@ -138,6 +139,7 @@ export const allSupportCards: Card[] = [
     name: 'DevOpsプラクティス',
     type: 'support',
     cost: 1,
+    extraCardsNextTurn: 1,
     effect: '捨てたカードの枚数に応じて、課題の状況レベルが8%ずつ向上します。また、次のターンで引くカードを1枚多く引けます。',
     description: '開発と運用を統合し、迅速なデリバリーと高品質なサービスを実現します。継続的インテグレーションと継続的デリバリーを実現します。',
     keywords: ['DevOps', 'CI/CD', '自動化']
