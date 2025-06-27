@@ -13,7 +13,8 @@ export const allSupportCards: Card[] = [
     cost: 1,
     effect: '提出したすべてのサービスカードの合計コストを3減らします。予算を超えている場合は状況レベルが5%向上します。',
     description: 'クラウドコストの最適化を支援するベストプラクティスを適用し、リソースの無駄を削減します。',
-    keywords: ['コスト最適化', '効率化', '予算管理']
+    keywords: ['コスト最適化', '効率化', '予算管理'],
+    costReduction: 3
   },
   {
     id: 102,
@@ -38,6 +39,7 @@ export const allSupportCards: Card[] = [
     name: 'オートスケーリング',
     type: 'support',
     cost: 1,
+    drawMultiplier: 3,
     effect: '次のターンで引くカードの枚数を3倍にします。また、EC2またはECSと組み合わせると状況レベルが10%向上します。',
     description: 'リソースを需要に応じて自動的にスケールさせる機能を実装し、トラフィック変動に対応します。',
     keywords: ['スケーラビリティ', '自動化', '需要対応']
@@ -49,7 +51,8 @@ export const allSupportCards: Card[] = [
     cost: 2,
     effect: 'EC2、RDS、ElastiCacheのコストを75%削減します。これらのカードを2枚以上使用すると、状況レベルが15%向上します。',
     description: '1年または3年の期間でインスタンスを予約することで、大幅な割引を受けられます。長期的なワークロードに最適です。',
-    keywords: ['コスト削減', '長期利用', '予約']
+    keywords: ['コスト削減', '長期利用', '予約'],
+    costReduction: 2
   },
   {
     id: 106,
@@ -58,7 +61,8 @@ export const allSupportCards: Card[] = [
     cost: 0,
     effect: 'EC2インスタンスのコストを90%削減しますが、次のターンで状況レベルが5%低下するリスクがあります。',
     description: 'AWS の未使用のキャパシティを活用して、オンデマンド料金から最大90%の割引を受けられますが、中断のリスクがあります。',
-    keywords: ['コスト削減', '一時的ワークロード', '柔軟性']
+    keywords: ['コスト削減', '一時的ワークロード', '柔軟性'],
+    costReduction: 2
   },
   {
     id: 107,
@@ -83,6 +87,7 @@ export const allSupportCards: Card[] = [
     name: 'インフラストラクチャ・アズ・コード',
     type: 'support',
     cost: 1,
+    allowsCardSelection: true,
     effect: '次のターンで引くカードを選択できます。また、デッキの上位5枚を見て、並べ替えることができます。',
     description: 'インフラストラクチャをコードとして定義し、一貫性のある環境を構築します。再現性と自動化を実現します。',
     keywords: ['IaC', '自動化', 'デプロイメント']
@@ -103,7 +108,8 @@ export const allSupportCards: Card[] = [
     cost: 1,
     effect: 'Lambda、API Gateway、DynamoDBのコストを75%削減します。これらのカードを使用すると、状況レベルが20%向上します。',
     description: 'サーバーの管理なしでアプリケーションを実行し、運用コストを削減します。イベント駆動型のスケーラブルなシステムを構築します。',
-    keywords: ['サーバーレス', '運用コスト削減', 'イベント駆動']
+    keywords: ['サーバーレス', '運用コスト削減', 'イベント駆動'],
+    costReduction: 2
   },
   {
     id: 112,
@@ -121,7 +127,8 @@ export const allSupportCards: Card[] = [
     cost: 1,
     effect: 'すべてのサービスカードのコストを2ずつ減らします。また、捨てたカードの枚数に応じてさらに1ずつコストが減ります。',
     description: 'リソースの使用状況を分析し、コスト効率を最適化します。無駄なリソースを特定し、適切なサイジングを実現します。',
-    keywords: ['コスト最適化', '効率化', '分析']
+    keywords: ['コスト最適化', '効率化', '分析'],
+    costReductionPerService: 2
   },
   {
     id: 114,
@@ -137,6 +144,7 @@ export const allSupportCards: Card[] = [
     name: 'DevOpsプラクティス',
     type: 'support',
     cost: 1,
+    extraCardsNextTurn: 1,
     effect: '捨てたカードの枚数に応じて、課題の状況レベルが8%ずつ向上します。また、次のターンで引くカードを1枚多く引けます。',
     description: '開発と運用を統合し、迅速なデリバリーと高品質なサービスを実現します。継続的インテグレーションと継続的デリバリーを実現します。',
     keywords: ['DevOps', 'CI/CD', '自動化']

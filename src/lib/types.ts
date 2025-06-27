@@ -14,6 +14,16 @@ export interface Card {
   imageUrl?: string;
   category?: string;
   keywords: string[];
+  /** 次のターンで引くカードを選択できるサポートカードか */
+  allowsCardSelection?: boolean;
+  /** 次のターンで引くカード枚数を倍増させる係数 */
+  drawMultiplier?: number;
+  /** 次のターンで引くカード枚数を追加する値 */
+  extraCardsNextTurn?: number;
+  /** サービスカード合計コストから減らす値 */
+  costReduction?: number;
+  /** サービスカード1枚あたりのコスト削減量 */
+  costReductionPerService?: number;
 }
 
 // チャレンジの型定義
@@ -39,6 +49,10 @@ export interface GameState {
   challengeStatusLevel: number;
   discardedCards: Card[];
   cardsToDrawNextTurn: number;
+  /** サポートカード効果で選択した次のターンで引くカード */
+  selectedCardForNextTurn: Card | null;
+  /** 選択肢として提示されているカード */
+  cardSelectionOptions: Card[];
   completedChallenges: CompletedChallenge[];
   totalScore: number;
   serviceDeck: Card[];

@@ -14,6 +14,7 @@ import ChallengeStatus from '../../components/ChallengeStatus';
 import EnhancedHand from '../../components/EnhancedHand';
 import SelectedCards from '../../components/SelectedCards';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import CardSelectionModal from '../../components/CardSelectionModal';
 import { 
   initializeGame, 
   selectNewChallenge,
@@ -25,7 +26,9 @@ import {
   submitSolution,
   advanceToNextTurn,
   finishGame,
-  calculateTotalCost
+  calculateTotalCost,
+  calculateSynergyBonus,
+  selectCardForNextTurn
 } from '../../lib/gameLogic';
 import { evaluateTurn, evaluateSkip, evaluateFinalSolution, getChallenge } from '../../lib/clientActions';
 
@@ -103,6 +106,17 @@ export default function Game() {
       activatedSupportCards: gameState.activatedSupportCards.filter(c => c.id !== card.id)
     });
   };
+
+  // 次のターンで引くカードを選択する
+  const handleSelectNextTurnCard = (card: CardType) => {
+    if (!gameState) return;
+    setGameState(selectCardForNextTurn(gameState, card));
+  };
+
+  const handleCloseCardSelection = () => {
+    if (!gameState) return;
+    setGameState({ ...gameState, cardSelectionOptions: [] });
+  };
   
   // ターンをスキップする処理
   const handleSkipTurn = async () => {
@@ -170,6 +184,15 @@ export default function Game() {
         gameState.challengeStatus,
         gameState.challengeStatusLevel
       );
+
+      // サポートカードのシナジー効果を計算
+      const synergyBonus = calculateSynergyBonus(
+        gameState.selectedServiceCards,
+        gameState.activatedSupportCards,
+        gameState.currentChallenge
+      );
+      const adjustedStatusLevel = Math.min(100, result.statusLevel + synergyBonus);
+      result.statusLevel = adjustedStatusLevel;
       
       // 解決策を記録
       const submittedServiceCards = [...gameState.selectedServiceCards];
@@ -365,6 +388,14 @@ export default function Game() {
           <div>次のターンで引くカード: {gameState.cardsToDrawNextTurn}枚</div>
         )}
       </div>
+
+      {gameState.cardSelectionOptions.length > 0 && (
+        <CardSelectionModal
+          cards={gameState.cardSelectionOptions}
+          onSelect={handleSelectNextTurnCard}
+          onClose={handleCloseCardSelection}
+        />
+      )}
     </div>
   );
 }

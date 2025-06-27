@@ -7,6 +7,7 @@
 
 import { Card, Challenge, EvaluationResult, FinalEvaluationResult, TurnHistory } from "./types";
 import { challenges, ec2ManagementChallenges } from "../data/index";
+import { calculateTotalCost } from "./gameLogic";
 import { GameMode } from "../data/gameModes";
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 
@@ -132,8 +133,8 @@ export async function evaluateTurnServer(
         ).join('\n')
       : '\n\n## サポートカード\n有効化されていません';
     
-    // 総コストを計算
-    const totalCost = serviceCards.reduce((sum, card) => sum + card.cost, 0);
+    // 総コストを計算（サポートカードによるコスト削減を考慮）
+    const totalCost = calculateTotalCost(serviceCards, supportCards);
     
     // プロンプトを作成
     const prompt = EVALUATION_PROMPT
