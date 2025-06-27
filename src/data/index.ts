@@ -14,6 +14,8 @@ import { serviceCards7 } from './cards7';
 import { supportCards } from './supportCards';
 import { supportCards2 } from './supportCards2';
 import { challenges } from './challenges';
+import { ec2ManagementCards } from './ec2ManagementCards';
+import { ec2ManagementChallenges } from './ec2ManagementChallenges';
 
 // Combine all service cards
 export const allServiceCards: Card[] = [
@@ -39,3 +41,4 @@ export const allCards: Card[] = [
 
 // Export challenges
 export { challenges };
+export { ec2ManagementCards, ec2ManagementChallenges };

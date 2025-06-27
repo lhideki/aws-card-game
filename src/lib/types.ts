@@ -42,6 +42,8 @@ export interface GameState {
   completedChallenges: CompletedChallenge[];
   totalScore: number;
   serviceDeck: Card[];
+  supportDeck: Card[];
+  mode: string;
   isGameOver: boolean;
   usedServiceCards: Card[]; // これまでのターンで使用したサービスカード
   usedSupportCards: Card[]; // これまでのターンで使用したサポートカード
