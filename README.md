@@ -159,6 +159,19 @@ aws ecr delete-repository --repository-name aws-card-game --force --region ap-no
 * `NEXT_PUBLIC_AWS_REGION`: AWSリージョン（例: ap-northeast-1）
 * `NEXT_PUBLIC_BEDROCK_MODEL_ID`: BedrockのモデルID（例: anthropic.claude-3-haiku-20240307-v1:0）
 
+## Bedrockレスポンスのストリーミング取得
+
+`src/lib/bedrock.ts` には Bedrock からのレスポンスをストリーミングで
+取得する `streamModelResponse` 関数を用意しています。
+
+```ts
+import { streamModelResponse } from "./src/lib/bedrock";
+
+for await (const chunk of streamModelResponse("こんにちは")) {
+  console.log(chunk);
+}
+```
+
 ## ライセンス
 
 MIT
