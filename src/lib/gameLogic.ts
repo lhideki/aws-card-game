@@ -606,12 +606,24 @@ export function finishGame(
  * @param supportCards サポートカードの配列
  * @returns 総コスト
  */
-export function calculateTotalCost(serviceCards: Card[], supportCards: Card[]): number {
+export function calculateTotalCost(
+  serviceCards: Card[],
+  supportCards: Card[]
+): number {
   const serviceCost = serviceCards.reduce((sum, card) => sum + card.cost, 0);
   const supportCost = supportCards.reduce((sum, card) => sum + card.cost, 0);
 
-  // サポートカードがある場合、サービスカードの合計コストを減らす
-  const reducedServiceCost = Math.max(0, serviceCost - supportCards.length);
+  let reduction = 0;
+  for (const support of supportCards) {
+    if (support.costReduction) {
+      reduction += support.costReduction;
+    }
+    if (support.costReductionPerService) {
+      reduction += support.costReductionPerService * serviceCards.length;
+    }
+  }
+
+  const reducedServiceCost = Math.max(0, serviceCost - reduction);
 
   return reducedServiceCost + supportCost;
 }

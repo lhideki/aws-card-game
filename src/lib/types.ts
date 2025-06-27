@@ -20,6 +20,10 @@ export interface Card {
   drawMultiplier?: number;
   /** 次のターンで引くカード枚数を追加する値 */
   extraCardsNextTurn?: number;
+  /** サービスカード合計コストから減らす値 */
+  costReduction?: number;
+  /** サービスカード1枚あたりのコスト削減量 */
+  costReductionPerService?: number;
 }
 
 // チャレンジの型定義
