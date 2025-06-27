@@ -1,4 +1,8 @@
-import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
+import {
+  BedrockRuntimeClient,
+  InvokeModelCommand,
+  InvokeModelWithResponseStreamCommand,
+} from "@aws-sdk/client-bedrock-runtime";
 import { Card, Challenge } from "../lib/types";
 
 // Bedrockクライアントの初期化
@@ -241,5 +245,45 @@ export async function evaluateFinalSolution(
       message: "申し訳ありません。最終評価中にエラーが発生しました。",
       score: Math.round(finalStatusLevel * 0.7) // エラー時のデフォルト値
     };
+  }
+}
+
+// Bedrockモデルのレスポンスをストリーミングで取得する
+export async function* streamModelResponse(
+  prompt: string,
+  maxTokens = 1000
+): AsyncGenerator<string> {
+  const modelId =
+    process.env.NEXT_PUBLIC_BEDROCK_MODEL_ID ||
+    "anthropic.claude-3-sonnet-20240229-v1:0";
+
+  const command = new InvokeModelWithResponseStreamCommand({
+    modelId,
+    contentType: "application/json",
+    accept: "application/json",
+    body: JSON.stringify({
+      anthropic_version: "bedrock-2023-05-31",
+      max_tokens: maxTokens,
+      temperature: 0.7,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    }),
+  });
+
+  const response = await bedrockClient.send(command);
+  const decoder = new TextDecoder();
+
+  for await (const event of response.body) {
+    const bytes = event.chunk?.bytes;
+    if (!bytes) continue;
+    const json = JSON.parse(decoder.decode(bytes));
+    const text = json.delta?.text || json.content_block?.text;
+    if (text) {
+      yield text as string;
+    }
   }
 }
