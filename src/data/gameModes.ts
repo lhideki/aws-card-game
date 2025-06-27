@@ -1,7 +1,30 @@
-import { allServiceCards, allSupportCards, challenges } from './index';
+import { serviceCards } from './cards';
+import { serviceCards2 } from './cards2';
+import { serviceCards3 } from './cards3';
+import { serviceCards4 } from './cards4';
+import { serviceCards5 } from './cards5';
+import { serviceCards6 } from './cards6';
+import { serviceCards7 } from './cards7';
+import { supportCards } from './supportCards';
+import { challenges } from './challenges';
 import { ec2ManagementCards } from './ec2ManagementCards';
 import { ec2ManagementChallenges } from './ec2ManagementChallenges';
 import { Card, Challenge } from '../lib/types';
+
+// Combine all service cards locally to avoid circular dependency
+const allServiceCards: Card[] = [
+  ...serviceCards,
+  ...serviceCards2,
+  ...serviceCards3,
+  ...serviceCards4,
+  ...serviceCards5,
+  ...serviceCards6,
+  ...serviceCards7
+];
+
+const allSupportCards: Card[] = [
+  ...supportCards
+];
 
 export interface GameModeConfig {
   id: string;
