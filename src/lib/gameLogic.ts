@@ -34,6 +34,8 @@ export function initializeGame(
     challengeStatusLevel: DEFAULT_STATUS_LEVEL,
     discardedCards: [],
     cardsToDrawNextTurn: 1,
+    selectedCardForNextTurn: null,
+    cardSelectionOptions: [],
     completedChallenges: [],
     totalScore: 0,
     serviceDeck: [...serviceCards],
@@ -308,7 +310,9 @@ export function selectNewChallengeAndDealCards(
     supportCards: initialSupportCards,
     serviceDeck: remainingServiceDeck,
     challengeStatus: `課題「${challenge.title}」が提示されました。解決策を考えてください。`,
-    challengeStatusLevel: DEFAULT_STATUS_LEVEL
+    challengeStatusLevel: DEFAULT_STATUS_LEVEL,
+    selectedCardForNextTurn: null,
+    cardSelectionOptions: []
   };
 }
 
@@ -353,20 +357,61 @@ export function selectServiceCard(gameState: GameState, card: Card): GameState {
 export function toggleSupportCard(gameState: GameState, card: Card): GameState {
   // すでに有効化されているカードかチェック
   const isAlreadyActivated = gameState.activatedSupportCards.some(c => c.id === card.id);
-  
+
   if (isAlreadyActivated) {
     // すでに有効化されている場合は無効化
+    const returnOptions = card.allowsCardSelection ? [...gameState.cardSelectionOptions] : [];
     return {
       ...gameState,
-      activatedSupportCards: gameState.activatedSupportCards.filter(c => c.id !== card.id)
+      activatedSupportCards: [],
+      cardSelectionOptions: [],
+      selectedCardForNextTurn: null,
+      serviceDeck: [...gameState.serviceDeck, ...returnOptions]
     };
   } else {
-    // 新しく有効化する場合
-    return {
+    // すでに別のサポートカードが有効化されている場合は置き換える
+    let newDeck = [...gameState.serviceDeck];
+    if (gameState.activatedSupportCards.length > 0) {
+      const prev = gameState.activatedSupportCards[0];
+      if (prev.allowsCardSelection) {
+        newDeck = [...newDeck, ...gameState.cardSelectionOptions];
+      }
+    }
+
+    let newState: GameState = {
       ...gameState,
-      activatedSupportCards: [...gameState.activatedSupportCards, card]
+      activatedSupportCards: [card],
+      cardSelectionOptions: [],
+      selectedCardForNextTurn: null,
+      serviceDeck: newDeck
     };
+
+    if (card.allowsCardSelection && newState.serviceDeck.length > 0) {
+      const options = newState.serviceDeck.slice(0, 5);
+      newState = {
+        ...newState,
+        cardSelectionOptions: options,
+        serviceDeck: newState.serviceDeck.filter(c => !options.includes(c))
+      };
+    }
+
+    return newState;
   }
+}
+
+/**
+ * 次のターンで引くカードを選択する関数
+ * @param gameState 現在のゲーム状態
+ * @param card 選択したカード
+ * @returns 更新されたゲーム状態
+ */
+export function selectCardForNextTurn(gameState: GameState, card: Card): GameState {
+  const remainingOptions = gameState.cardSelectionOptions.filter(c => c.id !== card.id);
+  return {
+    ...gameState,
+    selectedCardForNextTurn: card,
+    cardSelectionOptions: remainingOptions
+  };
 }
 
 /**
@@ -445,8 +490,8 @@ export function submitSolution(gameState: GameState): GameState {
  * @returns 更新されたゲーム状態
  */
 export function advanceToNextTurn(
-  gameState: GameState, 
-  evaluation: string, 
+  gameState: GameState,
+  evaluation: string,
   newStatusLevel: number
 ): GameState {
   const nextTurn = gameState.currentTurn;
@@ -462,32 +507,41 @@ export function advanceToNextTurn(
   }
   
   // チャレンジに関連するカードを優先して引く
-  let newCards = [];
+  let newCards: Card[] = [];
   let newDeck = [...gameState.serviceDeck];
+
+  let drawCount = gameState.cardsToDrawNextTurn;
+
+  if (gameState.selectedCardForNextTurn) {
+    newCards.push(gameState.selectedCardForNextTurn);
+    drawCount = Math.max(0, drawCount - 1);
+  }
   
   if (gameState.currentChallenge) {
     // デッキからチャレンジに関連するカードをフィルタリング
     const relatedCards = filterCardsByChallenge(gameState.serviceDeck, gameState.currentChallenge);
     
     // 関連するカードが十分にある場合
-    if (relatedCards.length >= gameState.cardsToDrawNextTurn) {
+    if (relatedCards.length >= drawCount) {
       // 関連するカードをシャッフルして必要な枚数だけ取得
-      const shuffledRelatedCards = shuffleCards(relatedCards).slice(0, gameState.cardsToDrawNextTurn);
+      const shuffledRelatedCards = shuffleCards(relatedCards).slice(0, drawCount);
       newCards = shuffledRelatedCards;
-      
+
       // デッキから引いたカードを除外
-      newDeck = gameState.serviceDeck.filter(card => 
+      newDeck = gameState.serviceDeck.filter(card =>
         !shuffledRelatedCards.some(drawnCard => drawnCard.id === card.id)
       );
     } else {
       // 関連するカードが十分にない場合は通常通りデッキから引く
-      newCards = gameState.serviceDeck.slice(0, gameState.cardsToDrawNextTurn);
-      newDeck = gameState.serviceDeck.slice(gameState.cardsToDrawNextTurn);
+      const drawn = gameState.serviceDeck.slice(0, drawCount);
+      newCards = newCards.concat(drawn);
+      newDeck = gameState.serviceDeck.slice(drawCount);
     }
   } else {
     // チャレンジがない場合は通常通りデッキから引く
-    newCards = gameState.serviceDeck.slice(0, gameState.cardsToDrawNextTurn);
-    newDeck = gameState.serviceDeck.slice(gameState.cardsToDrawNextTurn);
+    const drawn = gameState.serviceDeck.slice(0, drawCount);
+    newCards = newCards.concat(drawn);
+    newDeck = gameState.serviceDeck.slice(drawCount);
   }
   
   return {
@@ -497,7 +551,9 @@ export function advanceToNextTurn(
     challengeStatus: evaluation,
     challengeStatusLevel: newStatusLevel,
     cardsToDrawNextTurn: 1, // リセット
-    serviceDeck: newDeck
+    serviceDeck: newDeck,
+    selectedCardForNextTurn: null,
+    cardSelectionOptions: []
   };
 }
 
@@ -543,5 +599,41 @@ export function finishGame(
 export function calculateTotalCost(serviceCards: Card[], supportCards: Card[]): number {
   const serviceCost = serviceCards.reduce((sum, card) => sum + card.cost, 0);
   const supportCost = supportCards.reduce((sum, card) => sum + card.cost, 0);
-  return serviceCost + supportCost;
+
+  // サポートカードがある場合、サービスカードの合計コストを減らす
+  const reducedServiceCost = Math.max(0, serviceCost - supportCards.length);
+
+  return reducedServiceCost + supportCost;
+}
+
+/**
+ * サポートカードとサービスカード、課題のシナジーによるボーナスを計算
+ * @param serviceCards 今回提出したサービスカード
+ * @param supportCards 今回有効化したサポートカード
+ * @param challenge 現在の課題
+ * @returns シナジーによる状況レベルボーナス
+ */
+export function calculateSynergyBonus(
+  serviceCards: Card[],
+  supportCards: Card[],
+  challenge?: Challenge | null
+): number {
+  let bonus = 0;
+
+  for (const support of supportCards) {
+    // サポートカードとサービスカードのキーワードが一致しているか
+    const hasServiceSynergy = serviceCards.some(service =>
+      service.keywords.some(k => support.keywords.includes(k))
+    );
+    if (hasServiceSynergy) {
+      bonus += 5;
+    }
+
+    // サポートカードと課題のキーワードが一致しているか
+    if (challenge && support.keywords.some(k => challenge.keywords.includes(k))) {
+      bonus += 5;
+    }
+  }
+
+  return bonus;
 }

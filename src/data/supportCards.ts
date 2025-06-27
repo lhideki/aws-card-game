@@ -83,6 +83,7 @@ export const allSupportCards: Card[] = [
     name: 'インフラストラクチャ・アズ・コード',
     type: 'support',
     cost: 1,
+    allowsCardSelection: true,
     effect: '次のターンで引くカードを選択できます。また、デッキの上位5枚を見て、並べ替えることができます。',
     description: 'インフラストラクチャをコードとして定義し、一貫性のある環境を構築します。再現性と自動化を実現します。',
     keywords: ['IaC', '自動化', 'デプロイメント']

@@ -14,6 +14,8 @@ export interface Card {
   imageUrl?: string;
   category?: string;
   keywords: string[];
+  /** 次のターンで引くカードを選択できるサポートカードか */
+  allowsCardSelection?: boolean;
 }
 
 // チャレンジの型定義
@@ -39,6 +41,10 @@ export interface GameState {
   challengeStatusLevel: number;
   discardedCards: Card[];
   cardsToDrawNextTurn: number;
+  /** サポートカード効果で選択した次のターンで引くカード */
+  selectedCardForNextTurn: Card | null;
+  /** 選択肢として提示されているカード */
+  cardSelectionOptions: Card[];
   completedChallenges: CompletedChallenge[];
   totalScore: number;
   serviceDeck: Card[];
