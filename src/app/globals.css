@@ -129,6 +129,20 @@ body {
   50% { opacity: 0.5; }
 }
 
+/* Card selection animation */
+@keyframes card-select {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-card-select {
+  animation: card-select 0.2s ease-in-out;
+}
+
 /* Confetti animation for results page */
 .confetti {
   position: absolute;

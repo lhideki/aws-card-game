@@ -15,11 +15,11 @@ interface CardProps {
   onClick?: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ 
-  card, 
-  isSelected = false, 
+const Card: React.FC<CardProps> = ({
+  card,
+  isSelected = false,
   isActivated = false,
-  onClick 
+  onClick
 }) => {
   // カードタイプに応じたスタイルを設定
   const cardTypeStyles = {
@@ -34,10 +34,12 @@ const Card: React.FC<CardProps> = ({
   };
   
   const style = cardTypeStyles[card.type];
-  
+
+  const animationClass = (isSelected || isActivated) ? 'animate-card-select' : '';
+
   return (
-    <div 
-      className={`bg-white rounded-lg shadow-card overflow-hidden ${style.border} hover:shadow-card-hover transition-all duration-200 cursor-pointer`}
+    <div
+      className={`bg-white rounded-lg shadow-card overflow-hidden ${style.border} hover:shadow-card-hover transition-all duration-200 cursor-pointer ${animationClass}`}
       onClick={onClick}
       style={{ minHeight: '200px' }}
     >
