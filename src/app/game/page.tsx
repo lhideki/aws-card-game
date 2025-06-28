@@ -5,7 +5,7 @@
  * ゲームの主要な画面とロジックを提供します
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card as CardType, Challenge, GameState, TurnHistory } from '../../lib/types';
@@ -34,7 +34,7 @@ import {
 } from '../../lib/gameLogic';
 import { evaluateTurn, evaluateSkip, evaluateFinalSolution, getChallenge } from '../../lib/clientActions';
 
-export default function Game() {
+function GameContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialMode = searchParams.get('mode') as GameMode | null;
@@ -393,5 +393,21 @@ export default function Game() {
 
       {isLoading && <LoadingOverlay text="LLMの回答を待っています..." />}
     </div>
+  );
+}
+
+export default function Game() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <LoadingSpinner size="lg" text="ゲームを準備中..." />
+          </div>
+        </div>
+      }
+    >
+      <GameContent />
+    </Suspense>
   );
 }
