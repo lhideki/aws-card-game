@@ -59,7 +59,7 @@ export default function Rules() {
       </div>
       
       <div className="text-center mt-8">
-        <Link href="/game" className="btn btn-primary">
+        <Link href="/game/modes" className="btn btn-primary">
           ゲームを始める
         </Link>
         <Link href="/" className="btn btn-secondary ml-4">

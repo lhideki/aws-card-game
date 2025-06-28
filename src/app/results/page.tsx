@@ -90,8 +90,8 @@ function ResultsContent() {
           <Link href="/" className="btn btn-primary px-8 py-3 text-lg block">
             トップページに戻る
           </Link>
-          <button 
-            onClick={() => router.push('/game')}
+          <button
+            onClick={() => router.push('/game/modes')}
             className="btn btn-secondary px-8 py-3 text-lg block w-full"
           >
             もう一度プレイする
