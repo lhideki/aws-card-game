@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { gameModes } from '../../../data/gameModes';
 
 export default function GameModeSelection() {
@@ -12,18 +11,6 @@ export default function GameModeSelection() {
         <h1 className="text-3xl md:text-4xl font-bold text-center text-aws-blue mb-8">
           ゲームモードを選択
         </h1>
-
-        <div className="flex justify-center mb-12">
-          <div className="relative w-full max-w-md h-56 bg-white rounded-lg shadow-card overflow-hidden border border-gray-200">
-            <Image
-              src="/screenshots/game-screen.png"
-              alt="ゲーム画面"
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {Object.values(gameModes).map(mode => (
             <div
