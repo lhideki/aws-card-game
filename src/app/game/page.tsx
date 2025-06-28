@@ -318,10 +318,10 @@ export default function Game() {
       </div>
       
       {gameState.currentChallenge && (
-        <div className="mt-6">
+        <div className="mt-6 sticky top-0 z-20 bg-white">
           <ChallengeCard challenge={gameState.currentChallenge} />
-          <ChallengeStatus 
-            status={gameState.challengeStatus} 
+          <ChallengeStatus
+            status={gameState.challengeStatus}
             statusLevel={gameState.challengeStatusLevel}
             typingSpeed={20} // 少し速めのタイピング速度
           />
