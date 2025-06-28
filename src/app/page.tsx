@@ -87,8 +87,8 @@ export default function Home() {
         </div>
         
         <div className="text-center">
-          <Link 
-            href="/game" 
+          <Link
+            href="/game/modes"
             className="btn btn-primary px-12 py-4 text-xl inline-block animate-bounce-slow"
           >
             ゲームを始める

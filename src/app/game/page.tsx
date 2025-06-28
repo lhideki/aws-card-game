@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Card as CardType, Challenge, GameState, TurnHistory } from '../../lib/types';
 import { gameModes, GameMode } from '../../data/gameModes';
 import ChallengeCard from '../../components/ChallengeCard';
@@ -35,10 +36,12 @@ import { evaluateTurn, evaluateSkip, evaluateFinalSolution, getChallenge } from 
 
 export default function Game() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialMode = searchParams.get('mode') as GameMode | null;
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [turnHistory, setTurnHistory] = useState<TurnHistory[]>([]);
-  const [mode, setMode] = useState<GameMode | null>(null);
+  const [mode, setMode] = useState<GameMode | null>(initialMode);
   
   // ゲームの初期化
   useEffect(() => {
@@ -276,21 +279,11 @@ export default function Game() {
   
   if (!mode) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
-          {Object.values(gameModes).map(m => (
-            <div key={m.id} className="bg-white rounded-lg shadow-card border border-gray-200 p-6 flex flex-col">
-              <h2 className="text-xl font-bold text-aws-blue mb-2">{m.title}</h2>
-              <p className="text-gray-700 flex-grow whitespace-pre-wrap">{m.description}</p>
-              <button
-                className="btn btn-primary mt-4"
-                onClick={() => setMode(m.id as GameMode)}
-              >
-                このモードで開始
-              </button>
-            </div>
-          ))}
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p className="text-lg text-gray-700">ゲームモードが選択されていません。</p>
+        <Link href="/game/modes" className="btn btn-primary">
+          モードを選択する
+        </Link>
       </div>
     );
   }
